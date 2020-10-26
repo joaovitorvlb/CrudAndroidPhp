@@ -5,25 +5,25 @@
     android:layout_width="match_parent">
 
     <TextView
-        android:id="@+id/editId"
+        android:id="@+id/eeditId"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:text="Nome" />
 
     <TextView
-        android:id="@+id/editNome"
+        android:id="@+id/eeditNome"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Telefone" />
 
     <TextView
-        android:id="@+id/editTelefone"
+        android:id="@+id/eeditTelefone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Email" />
 
     <TextView
-        android:id="@+id/editEmail"
+        android:id="@+id/eeditEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Email" />
