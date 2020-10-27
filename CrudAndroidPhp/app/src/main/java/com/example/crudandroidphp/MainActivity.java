@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,7 +21,8 @@ public class MainActivity extends AppCompatActivity {
     Button btnNovo, btnSalvar, btnExcluir;
     ListView listViewContatos;
 
-    private String HOST = "http://192.168.0.16/crud";
+    // private String HOST = "http://192.168.0.16";
+    private String HOST = "http://env-9429261.jelastic.saveincloud.net";
 
     @SuppressLint("WrongViewCast")
     @Override
@@ -48,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
                 String telefone = editTelefone.getText().toString();
                 String email = editEmail.getText().toString();
 
-                String url = HOST + "/create.php";
+                String url = HOST + "/crud/create.php";
 
                 if (nome.isEmpty()){
                     editNome.setError("O nome é obrigatório");
@@ -62,12 +64,15 @@ public class MainActivity extends AppCompatActivity {
                             .setCallback(new FutureCallback<JsonObject>() {
                                 @Override
                                 public void onCompleted(Exception e, JsonObject result) {
-                                    if(result.get("create").getAsString().equals("ok")) {
 
-                                        // int idRetornado = Integer.parseInt(result.get("id").getAsString());
-                                        Toast.makeText(MainActivity.this, "Salvo com sucesso", Toast.LENGTH_LONG).show();
-                                    } else {
-                                        Toast.makeText(MainActivity.this, "Ocorreu erro na hora de gravar", Toast.LENGTH_LONG).show();
+                                    if (e == null && result != null) {
+                                        if (result.get("create").getAsString().equals("ok")) {
+
+                                            int idRetornado = Integer.parseInt(result.get("id").getAsString());
+                                            Toast.makeText(MainActivity.this, "Salvo com sucesso, id: " + idRetornado, Toast.LENGTH_LONG).show();
+                                        } else {
+                                            Toast.makeText(MainActivity.this, "Ocorreu erro na hora de gravar", Toast.LENGTH_LONG).show();
+                                        }
                                     }
                                 }
                             });
