@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
                                     if (e == null && result != null) {
                                         if (result.get("create").getAsString().equals("ok")) {
-
+                                            limparCampos();
                                             int idRetornado = Integer.parseInt(result.get("id").getAsString());
                                             Toast.makeText(MainActivity.this, "Salvo com sucesso, id: " + idRetornado, Toast.LENGTH_LONG).show();
                                         } else {
@@ -81,4 +81,11 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public void limparCampos(){
+        editId.setText(" ");
+        editNome.setText(" ");
+        editTelefone.setText(" ");
+        editEmail.setText(" ");
+        editNome.requestFocus();
+    }
 }
