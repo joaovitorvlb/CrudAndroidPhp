@@ -92,7 +92,13 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        
+
+        btnNovo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                limparCampos();
+            }
+        });
 
         listViewContatos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
