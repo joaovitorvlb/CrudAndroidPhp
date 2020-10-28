@@ -11,15 +11,21 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     EditText editNome, editTelefone, editEmail, editId;
     Button btnNovo, btnSalvar, btnExcluir;
     ListView listViewContatos;
+    ContatosAdapter contatosAdapter;
+    ArrayList<Contato> lista;
 
     // private String HOST = "http://192.168.0.16";
     private String HOST = "http://env-9429261.jelastic.saveincloud.net";
@@ -40,6 +46,12 @@ public class MainActivity extends AppCompatActivity {
         btnExcluir = findViewById(R.id.btnExcluir);
 
         listViewContatos= findViewById(R.id.listVewContato);
+
+        listaContatos();
+
+        lista = new ArrayList<Contato>();
+        contatosAdapter = new ContatosAdapter(MainActivity.this, lista);
+        listViewContatos.setAdapter(contatosAdapter);
 
         btnSalvar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,5 +99,30 @@ public class MainActivity extends AppCompatActivity {
         editTelefone.setText(" ");
         editEmail.setText(" ");
         editNome.requestFocus();
+    }
+
+    private void listaContatos(){
+        String url = HOST + "/crud/read.php";
+        Ion.with(getBaseContext())
+                .load(url)
+                .asJsonArray()
+                .setCallback(new FutureCallback<JsonArray>() {
+                    @Override
+                    public void onCompleted(Exception e, JsonArray result) {
+                        for(int i = 0; i < result.size(); i++){
+                            JsonObject obj = result.get(i).getAsJsonObject();
+
+                            Contato contato = new Contato();
+                            contato.setId(obj.get("id").getAsInt());
+                            contato.setNome(obj.get("nome").getAsString());
+                            contato.setTelefone(obj.get("telefone").getAsString());
+                            contato.setEmail(obj.get("email").getAsString());
+
+                            lista.add(contato);
+                        }
+                        contatosAdapter.notifyDataSetChanged();
+                    }
+                });
+
     }
 }
