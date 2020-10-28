@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -89,6 +90,19 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             });
                 }
+            }
+        });
+        
+
+        listViewContatos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                Contato contato = (Contato) adapterView.getAdapter().getItem(position);
+
+                editId.setText(String.valueOf(contato.getId()));
+                editNome.setText(contato.getNome());
+                editTelefone.setText(contato.getTelefone());
+                editEmail.setText(contato.getEmail());
             }
         });
     }
