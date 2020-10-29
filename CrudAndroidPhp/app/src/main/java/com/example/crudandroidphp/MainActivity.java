@@ -82,6 +82,19 @@ public class MainActivity extends AppCompatActivity {
                                         if (result.get("create").getAsString().equals("ok")) {
                                             limparCampos();
                                             int idRetornado = Integer.parseInt(result.get("id").getAsString());
+
+                                            Contato contato  = new Contato();
+                                            contato.setId(idRetornado);
+                                            contato.setNome(nome);
+                                            contato.setTelefone(telefone);
+                                            contato.setEmail(email);
+
+                                            lista.add(contato);
+
+                                            contatosAdapter.notifyDataSetChanged();
+
+                                            limparCampos();
+
                                             Toast.makeText(MainActivity.this, "Salvo com sucesso, id: " + idRetornado, Toast.LENGTH_LONG).show();
                                         } else {
                                             Toast.makeText(MainActivity.this, "Ocorreu erro na hora de gravar", Toast.LENGTH_LONG).show();
