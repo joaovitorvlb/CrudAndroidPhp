@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
                                 @Override
                                 public void onCompleted(Exception e, JsonObject result) {
 
-                                    if (e == null && result != null) {
+                                    if (e == null && result != null && id == null) {
                                         if (result.get("update").getAsString().equals("ok")) {
                                             limparCampos();
 
@@ -141,11 +141,6 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                 }
                             });
-
-
-
-
-
                 }
             }
         });
@@ -154,6 +149,48 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 limparCampos();
+            }
+        });
+
+        btnExcluir.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                final String id = editId.getText().toString();
+
+                if (id.isEmpty()){
+                    Toast.makeText(MainActivity.this, "Nenhum contato está selecionado", Toast.LENGTH_LONG).show();
+                } else {    // Tentar apagar o contato
+
+                    String url = HOST + "/crud/delete.php";
+
+                    Ion.with(MainActivity.this)
+                            .load(url)
+                            .setBodyParameter("id", id)
+                            .asJsonObject()
+                            .setCallback(new FutureCallback<JsonObject>() {
+                                @Override
+                                public void onCompleted(Exception e, JsonObject result) {
+
+                                    if (e == null && result != null) {
+                                        if (result.get("delete").getAsString().equals("ok")) {
+                                            limparCampos();
+
+                                            lista.remove(itemClicado);
+
+                                            contatosAdapter.notifyDataSetChanged();
+
+                                            limparCampos();
+
+                                            Toast.makeText(MainActivity.this, "Deletado com sucesso", Toast.LENGTH_LONG).show();
+                                        } else {
+                                            Toast.makeText(MainActivity.this, "Ocorreu erro na hora de deletar", Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                }
+                            });
+                }
+
             }
         });
 
