@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     ListView listViewContatos;
     ContatosAdapter contatosAdapter;
     ArrayList<Contato> lista;
+    private int itemClicado;
 
     // private String HOST = "http://192.168.0.16";
     private String HOST = "http://env-9429261.jelastic.saveincloud.net";
@@ -58,16 +59,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                String id = editId.getText().toString();
-                String nome = editNome.getText().toString();
-                String telefone = editTelefone.getText().toString();
-                String email = editEmail.getText().toString();
-
-                String url = HOST + "/crud/create.php";
+                final String id = editId.getText().toString();
+                final String nome = editNome.getText().toString();
+                final String telefone = editTelefone.getText().toString();
+                final String email = editEmail.getText().toString();
 
                 if (nome.isEmpty()){
                     editNome.setError("O nome é obrigatório");
-                } else if (id.isEmpty()){
+                } else if (id.isEmpty()){   // Se sim então é un novo contato
+
+                    String url = HOST + "/crud/create.php";
+
                     Ion.with(MainActivity.this)
                             .load(url)
                             .setBodyParameter("nome", nome)
@@ -102,6 +104,48 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                 }
                             });
+                } else {    // Se não é a edicao de um contato
+
+                    String url = HOST + "/crud/update.php";
+
+                    Ion.with(MainActivity.this)
+                            .load(url)
+                            .setBodyParameter("nome", nome)
+                            .setBodyParameter("telefone", telefone)
+                            .setBodyParameter("email", email)
+                            .asJsonObject()
+                            .setCallback(new FutureCallback<JsonObject>() {
+                                @Override
+                                public void onCompleted(Exception e, JsonObject result) {
+
+                                    if (e == null && result != null) {
+                                        if (result.get("update").getAsString().equals("ok")) {
+                                            limparCampos();
+
+                                            Contato contato  = new Contato();
+                                            contato.setId(Integer.parseInt(id));
+                                            contato.setNome(nome);
+                                            contato.setTelefone(telefone);
+                                            contato.setEmail(email);
+
+                                            lista.set(itemClicado, contato);
+
+                                            contatosAdapter.notifyDataSetChanged();
+
+                                            limparCampos();
+
+                                            Toast.makeText(MainActivity.this, "Editado com sucesso", Toast.LENGTH_LONG).show();
+                                        } else {
+                                            Toast.makeText(MainActivity.this, "Ocorreu erro na hora de gravar", Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                }
+                            });
+
+
+
+
+
                 }
             }
         });
@@ -122,6 +166,8 @@ public class MainActivity extends AppCompatActivity {
                 editNome.setText(contato.getNome());
                 editTelefone.setText(contato.getTelefone());
                 editEmail.setText(contato.getEmail());
+
+                itemClicado = position;
             }
         });
     }
